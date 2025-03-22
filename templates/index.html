@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Quantum Cryptography Simulation</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="32x32" href="{{ url_for('static', filename='img/icon-32x32.png') }}">
+    <link rel="apple-touch-icon" sizes="192x192" href="{{ url_for('static', filename='img/icon-192x192.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='img/icon-180x180.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lib/bootstrap-5.3.3.min.css') }}">
+  </head>
+  <body class="container mt-4">
+    <h1>Quantum Cryptography Simulation</h1>
+    <div class="row row-cols-1 row-cols-md-3 gy-3">
+      <div class="col border p-3">
+        <h3>Alice</h3>
+        <input id="aliceInput" type="text" class="form-control" placeholder="Plain Message">
+        <button onclick="sendAliceKey()" class="btn btn-primary mt-2">Send Key</button>
+        <button onclick="reconcileKey()" class="btn btn-primary mt-2">Reconcile Key</button>
+        <button onclick="sendAliceMessage()" class="btn btn-primary mt-2">Send Message</button>
+      </div>
+      <div class="col border p-3">
+        <h3>Bob</h3>
+        <input id="bobReceivedEncrypted" type="text" class="form-control" placeholder="Encrypted Message">
+        <button onclick="decodeBobMessage()" class="btn btn-primary mt-2">Decode</button>
+        <input id="bobDecoded" type="text" class="form-control mt-2" placeholder="Decoded Message" readonly>
+      </div>
+      <div class="col border p-3">
+        <h3>Eve</h3>
+        <input id="eveEavesdrop" type="text" class="form-control" placeholder="Encrypted Eavesdropped" readonly>
+        <button onclick="decodeEveMessage()" class="btn btn-secondary mt-2">Decode</button>
+        <input id="eveDecoded" type="text" class="form-control mt-2" placeholder="Decoded Message">
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col border p-3">
+        <h3>Encryption Model</h3>
+        <select id="encryptionModel" class="form-control">
+          <option>No encryption</option>
+          <option>BB84 Protocol</option>
+          <option>Ekert Protocol</option>
+        </select>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col border p-3">
+        <h3>Settings</h3>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="eavesdropping">
+          <label class="form-check-label" for="eavesdropping">Enable eavesdropping</label>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col border p-3">
+        <h3>Logs</h3>
+        <div id="logArea" style="height:300px; overflow:auto;"></div>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/lib/socket.io-4.8.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/socket.js') }}"></script>
+  </body>
+</html>
