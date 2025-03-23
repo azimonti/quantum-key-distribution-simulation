@@ -16,12 +16,12 @@ class NoEncryption(EncryptionBase):
         self._cfg = s
         self._protocol = 'No Protocol'
 
-    def _generateKey(self, seed: int = None):
+    def generateKey(self, seed: int = None):
         if seed is not None:
             np.random.seed(seed)
         bits = np.random.randint(0, 2, self._cfg.KEY_LENGTH, dtype=np.uint8)
         self._key = np.packbits(bits).tobytes()
         self._isKeyValid = True
 
-    def _reconcileKey(self, key):
+    def reconcileKey(self, key):
         self._isKeyValid = True

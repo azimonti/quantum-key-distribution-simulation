@@ -16,11 +16,11 @@ class EncryptionBase(ABC):
         self._protocol = None
 
     @abstractmethod
-    def _generateKey(self):
+    def generateKey(self):
         pass
 
     @abstractmethod
-    def _reconcileKey(self, key: str):
+    def reconcileKey(self, key: str):
         pass
 
     @property

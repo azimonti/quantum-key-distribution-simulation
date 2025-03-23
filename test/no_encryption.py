@@ -29,18 +29,18 @@ class TestNoEncryption(unittest.TestCase):
         self.assertEqual(COMPUTED, EXPECTED)
 
     def test_generate_key(self):
-        self.enc._generateKey(seed=8033)
+        self.enc.generateKey(seed=8033)
         self.assertEqual(self.enc.key_bits[0:16], '0110011100111001')
         self.assertEqual(self.enc.key_bits[1024:1048],
                          '001011000001110101100011')
 
     def test_key_valid(self):
         self.assertFalse(self.enc.isKeyValid())
-        self.enc._generateKey()
+        self.enc.generateKey()
         self.assertTrue(self.enc.isKeyValid())
 
     def test_encode_message(self):
-        self.enc._generateKey(seed=8033)
+        self.enc.generateKey(seed=8033)
         EXPECTED = 'This is a test message'
         message = self.enc.encrypt(EXPECTED)
         message_bits = ''.join(format(byte, '08b') for byte in message)
