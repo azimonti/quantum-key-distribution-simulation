@@ -1,14 +1,22 @@
+'''
+/***************/
+/*   app.py    */
+/* Version 1.0 */
+/*  2025/03/23 */
+/***************/
+'''
 import json
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 import logging
+from types import SimpleNamespace
 
 with open('config.json', 'r') as f:
-    cfg = json.load(f)
+    cfg = json.load(f, object_hook=lambda d: SimpleNamespace(**d))
 
-app = Flask(cfg['APP_NAME'])
-app.config['SECRET_KEY'] = cfg['SECRET_KEY']
-log_level = logging.INFO if cfg['VERBOSE'] else logging.ERROR
+app = Flask(cfg.APP_NAME)
+app.config['SECRET_KEY'] = cfg.SECRET_KEY
+log_level = logging.INFO if cfg.VERBOSE else logging.ERROR
 
 logging.basicConfig(
     level=log_level,

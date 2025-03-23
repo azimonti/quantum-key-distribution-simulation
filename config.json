@@ -1,5 +1,14 @@
 {
   "APP_NAME": "quantum-cryptography-simulation",
   "SECRET_KEY": "3e35f2a48a4f4950ad2861f6a9d7451a40cfd6493173b691331b82409c521f2fef05723ca7865d2e266a498a663a6e4d3a2f2c8d2fd1e7f8442214df3fbfec76881a26d33413798b9608d971a4b347471735c4bcfe77eab478a335d3b88f4af2fd19a9a12734945f207169d0480eae831d9df31185786302c763d6b1a1f9df6a",
-  "VERBOSE": true
+  "VERBOSE": true,
+  "NoEncryption" : {
+    "KEY_LENGTH": 2048
+  },
+  "BB84" : {
+    "KEY_LENGTH": 2048
+  },
+  "Ekert" : {
+    "KEY_LENGTH": 2048
+  }
 }

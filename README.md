@@ -15,7 +15,7 @@ To get started with these simulations:
    ```
    cd quantum-cryptography-simulation
    ```
-3. Install required dependencies:
+3. Install required dependencies (a virtual environment can be created running the script `create_env.sh`):
    ```
    pip install -r requirements.txt
    ```
