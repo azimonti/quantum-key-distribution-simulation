@@ -5,10 +5,10 @@
   "NoEncryption" : {
     "KEY_LENGTH": 2048
   },
-  "BB84" : {
+  "BB84Protocol" : {
     "KEY_LENGTH": 2048
   },
-  "Ekert" : {
+  "EkertProtocol" : {
     "KEY_LENGTH": 2048
   }
 }
