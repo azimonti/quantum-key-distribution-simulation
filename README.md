@@ -35,6 +35,12 @@ The difference is how the secret key is exchanged and what is the behavior when 
 
 In the case where no encryption protocol is used, there is no reconciliation between Bob and Alice, and if an eavesdropper is present, just hold a valid copy of the key and can decode the message without Alice or Bob noticing it.
 
+### BB84
+
+The BB84 protocol uses quantum mechanics for key exchange. Alice sends a sequence of qubits to Bob, randomly encoding each bit using one of two bases (e.g., rectilinear {0°, 90°} or diagonal {45°, 135°}). Bob measures each incoming qubit randomly in one of the two bases.
+
+After the transmission, Alice and Bob communicate over a public channel to reveal which basis they used for each qubit, discarding measurements where they used different bases. They then publicly compare a subset of the remaining bits. If an eavesdropper (Eve) intercepted and measured the qubits, she inevitably introduced errors because she did not know the original basis used by Alice. If the error rate exceeds a certain threshold, Alice and Bob discard the key, suspecting eavesdropping. Otherwise, they use the remaining agreed-upon bits (after error correction and privacy amplification) as their secret key.
+
 ## Contributing
 
 Contributions to the Quantum Cryptography Simulation project are welcome. Whether it's through submitting bug reports, proposing new features, or contributing to the code, your help is appreciated. For major changes, please open an issue first to discuss what you would like to change.
@@ -50,5 +56,5 @@ If you have any questions or want to get in touch regarding the project, please 
 ## TODO
 
 - [x] Implement one-time pad cryptography ([#1](https://github.com/azimonti/quantum-cryptography-simulation/issues/1))
-- [ ] Implement BB84 Protocol ([#2](https://github.com/azimonti/quantum-cryptography-simulation/issues/2))
+- [x] Implement BB84 Protocol ([#2](https://github.com/azimonti/quantum-cryptography-simulation/issues/2))
 - [ ] Implement Ekert Protocol ([#3](https://github.com/azimonti/quantum-cryptography-simulation/issues/3))

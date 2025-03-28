@@ -13,6 +13,7 @@ class EncryptionBase(ABC):
     def __init__(self):
         self._key = None
         self._isKeyValid = False
+        self._isKeyCompromised = None
         self._protocol = None
 
     @abstractmethod
@@ -20,7 +21,7 @@ class EncryptionBase(ABC):
         pass
 
     @abstractmethod
-    def reconcileKey(self, key: str):
+    def reconcileKey(self):
         pass
 
     @property
@@ -37,6 +38,9 @@ class EncryptionBase(ABC):
 
     def isKeyValid(self):
         return self._isKeyValid
+
+    def isKeyCompromised(self):
+        return self._isKeyCompromised
 
     def encrypt(self, message: str) -> bytes:
         if not self._isKeyValid:
@@ -70,3 +74,7 @@ class EncryptionBase(ABC):
         message_bytes = np.packbits(message_bits).tobytes()
         # Convert bytes back to text
         return message_bytes.decode()
+
+
+if __name__ == '__main__':
+    pass

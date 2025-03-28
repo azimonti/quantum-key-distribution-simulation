@@ -23,5 +23,11 @@ class NoEncryption(EncryptionBase):
         self._key = np.packbits(bits).tobytes()
         self._isKeyValid = True
 
-    def reconcileKey(self, key):
+    def reconcileKey(self):
         self._isKeyValid = True
+        self._isKeyCompromised = False
+        return self._isKeyCompromised
+
+
+if __name__ == '__main__':
+    pass

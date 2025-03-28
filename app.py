@@ -11,7 +11,7 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 import logging
 from types import SimpleNamespace
-from encryptlib import NoEncryption
+from encryptlib import NoEncryption, BB84Protocol
 
 with open('config.json', 'r') as f:
     cfg = json.load(f, object_hook=lambda d: SimpleNamespace(**d))
@@ -31,22 +31,22 @@ logger = logging.getLogger()
 socketio = SocketIO(app)
 
 
-def init_protocol(encryption):
+def init_protocol(encryption, eavesdropping):
     cache.protocol = encryption
     if encryption == "No Protocol":
         cache.enc = NoEncryption(cfg.NoEncryption)
         cache.enc.generateKey()
     elif encryption == "BB84 Protocol":
-        # TODO
-        pass
+        cache.enc = BB84Protocol(cfg.BB84Protocol)
+        cache.enc.generateKey()
+        cache.enc.sendKey(eavesdropping)
+        cache.enc.reconcileKey()
     elif encryption == "Ekert Protocol":
         # TODO
         pass
 
 
 def check_protocol(encryption):
-    print(cache.protocol)
-    print(encryption)
     return encryption == cache.protocol
 
 
@@ -55,12 +55,17 @@ def encode_message(message, encryption):
         logger.warning(f"Invalid protocol {encryption}")
         return (f"Invalid protocol \"{encryption}\" - expecting "
                 f"{cache.protocol}")
-    if encryption == "No Protocol":
-        cache.enc_message = cache.enc.encrypt(message)
-        # convert to b64 for display
-        message = base64.b64encode(cache.enc_message).decode()
-    elif encryption == "BB84 Protocol":
-        message = f"ENC[BB84]{message}"
+    if not cache.enc.isKeyValid():
+        return "Key is not valid"
+    if cache.enc.isKeyCompromised():
+        return "Key is compromised"
+    if encryption == "No Protocol" or encryption == "BB84 Protocol":
+        try:
+            cache.enc_message = cache.enc.encrypt(message)
+            # convert to b64 for display
+            message = base64.b64encode(cache.enc_message).decode()
+        except ValueError:
+            message = "Key is too short"
     elif encryption == "Ekert Protocol":
         message = f"ENC[Ekert]{message}"
     return message
@@ -74,7 +79,11 @@ def decode_message_bob(message, encryption):
     if encryption == "No Protocol":
         message = cache.enc.decrypt(cache.enc_message)
     elif encryption == "BB84 Protocol":
-        message = message[len("ENC[BB84]"):]
+        try:
+            decrypted = cache.enc.decrypt(cache.enc_message)
+            message = decrypted
+        except ValueError:
+            message = "Key is compromised"
     elif encryption == "Ekert Protocol":
         message = message[len("ENC[Ekert]"):]
     return message
@@ -88,7 +97,11 @@ def decode_message_eve(message, encryption):
     if encryption == "No Protocol":
         message = cache.enc.decrypt(cache.enc_message)
     elif encryption == "BB84 Protocol":
-        message = message[len("ENC[BB84]"):]
+        try:
+            decrypted = cache.enc.decrypt(cache.enc_message)
+            message = decrypted
+        except ValueError:
+            message = "You are eavesdropping"
     elif encryption == "Ekert Protocol":
         message = message[len("ENC[Ekert]"):]
     return message
@@ -103,7 +116,7 @@ def index():
 @socketio.on("alice_key")
 def handle_alice_key(data):
     # initialize the key
-    init_protocol(data["encryption"])
+    init_protocol(data["encryption"], data["eavesdropping"])
     if data["eavesdropping"]:
         logger.info("Eve is eavesdropping the key")
     else:
@@ -114,10 +127,14 @@ def handle_alice_key(data):
 
 @socketio.on("reconcile_key")
 def handle_reconcile_key(data):
-    reconciled = True
+    if data["encryption"] == "No Protocol" or \
+            data["encryption"] == "BB84 Protocol":
+        reconciled = cache.enc.reconcileKey()
+    else:
+        reconciled = True
     logger.info(f"Key reconciled: {reconciled}")
     emit("key_reconciled", {"encryption": data["encryption"],
-                            "reconciled": reconciled}, broadcast=True)
+                            "reconciled": bool(reconciled)}, broadcast=True)
 
 
 @socketio.on("alice_message")
