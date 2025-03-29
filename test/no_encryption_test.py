@@ -34,9 +34,17 @@ class TestNoEncryption(unittest.TestCase):
         self.assertEqual(self.enc.key_bits[1024:1048],
                          '000100001111100011011011')
 
-    def test_key_valid(self):
+    def test_generate_valid_key(self):
         self.assertFalse(self.enc.isKeyValid())
         self.enc.generateKey()
+        self.assertTrue(self.enc.isKeyValid())
+
+    def test_reconcile_multiple_times_valid_key(self):
+        self.enc.generateKey()
+        self.assertTrue(self.enc.isKeyValid())
+        self.enc.reconcileKey()
+        self.assertTrue(self.enc.isKeyValid())
+        self.enc.reconcileKey()
         self.assertTrue(self.enc.isKeyValid())
 
     def test_encode_message(self):

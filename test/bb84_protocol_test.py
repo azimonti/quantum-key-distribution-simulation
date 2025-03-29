@@ -39,6 +39,15 @@ class TestNoEncryption(unittest.TestCase):
         self.enc.reconcileKey()
         self.assertTrue(self.enc.isKeyValid())
 
+    def test_reconcile_multiple_times_valid_key(self):
+        self.enc.generateKey()
+        self.assertFalse(self.enc.isKeyValid())
+        self.enc.sendKey()
+        self.enc.reconcileKey()
+        self.assertTrue(self.enc.isKeyValid())
+        self.enc.reconcileKey()
+        self.assertTrue(self.enc.isKeyValid())
+
     def test_generate_eavesdropped_key(self):
         self.enc.generateKey()
         self.assertFalse(self.enc.isKeyValid())
@@ -53,7 +62,7 @@ class TestNoEncryption(unittest.TestCase):
         self.enc.reconcileKey()
         message = self.enc.encrypt(EXPECTED)
         message_bits = ''.join(format(byte, '08b') for byte in message)
-        self.assertEqual(message_bits[0:16], '0110101100110111')
+        self.assertEqual(message_bits[0:16], '0000101110111111')
         COMPUTED = self.enc.decrypt(message)
         self.assertEqual(COMPUTED, EXPECTED)
 

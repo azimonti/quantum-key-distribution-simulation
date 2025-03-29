@@ -8,7 +8,8 @@
   "BB84Protocol": {
     "KEY_LENGTH": 2048,
     "RECONCILIATION_SUBSET": 256,
-    "QBER": 0.11
+    "QBER": 0.11,
+    "BASIS": [0, 90]
   },
   "E91Protocol": {
     "KEY_LENGTH": 2048

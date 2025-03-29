@@ -26,7 +26,7 @@ class NoEncryption(EncryptionBase):
     def reconcileKey(self):
         self._isKeyValid = True
         self._isKeyCompromised = False
-        return self._isKeyCompromised
+        return not self._isKeyCompromised
 
 
 if __name__ == '__main__':

@@ -40,7 +40,6 @@ def init_protocol(encryption, eavesdropping):
         cache.enc = BB84Protocol(cfg.BB84Protocol)
         cache.enc.generateKey()
         cache.enc.sendKey(eavesdropping)
-        cache.enc.reconcileKey()
     elif encryption == "Ekert Protocol":
         # TODO
         pass
@@ -55,17 +54,13 @@ def encode_message(message, encryption):
         logger.warning(f"Invalid protocol {encryption}")
         return (f"Invalid protocol \"{encryption}\" - expecting "
                 f"{cache.protocol}")
-    if not cache.enc.isKeyValid():
-        return "Key is not valid"
-    if cache.enc.isKeyCompromised():
-        return "Key is compromised"
     if encryption == "No Protocol" or encryption == "BB84 Protocol":
         try:
             cache.enc_message = cache.enc.encrypt(message)
             # convert to b64 for display
             message = base64.b64encode(cache.enc_message).decode()
-        except ValueError:
-            message = "Key is too short"
+        except ValueError as e:
+            message = str(e)
     elif encryption == "Ekert Protocol":
         message = f"ENC[Ekert]{message}"
     return message
@@ -76,14 +71,12 @@ def decode_message_bob(message, encryption):
         logger.warning(f"Invalid protocol {encryption}")
         return (f"Invalid protocol \"{encryption}\" - expecting "
                 f"{cache.protocol}")
-    if encryption == "No Protocol":
-        message = cache.enc.decrypt(cache.enc_message)
-    elif encryption == "BB84 Protocol":
+    if encryption == "No Protocol" or encryption == "BB84 Protocol":
         try:
             decrypted = cache.enc.decrypt(cache.enc_message)
             message = decrypted
-        except ValueError:
-            message = "Key is compromised"
+        except ValueError as e:
+            message = str(e)
     elif encryption == "Ekert Protocol":
         message = message[len("ENC[Ekert]"):]
     return message
@@ -94,9 +87,7 @@ def decode_message_eve(message, encryption):
         logger.warning(f"Invalid protocol {encryption}")
         return (f"Invalid protocol \"{encryption}\" - expecting "
                 f"{cache.protocol}")
-    if encryption == "No Protocol":
-        message = cache.enc.decrypt(cache.enc_message)
-    elif encryption == "BB84 Protocol":
+    if encryption == "No Protocol" or encryption == "BB84 Protocol":
         try:
             decrypted = cache.enc.decrypt(cache.enc_message)
             message = decrypted
