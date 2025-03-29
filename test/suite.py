@@ -6,15 +6,15 @@
 /*****************/
 '''
 import unittest
-import bb84_protocol
-import no_encryption
+import bb84_protocol_test
+import no_encryption_test
 
 
 def LoadTests():
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
-    suite.addTests(loader.loadTestsFromModule(bb84_protocol))
-    suite.addTests(loader.loadTestsFromModule(no_encryption))
+    suite.addTests(loader.loadTestsFromModule(bb84_protocol_test))
+    suite.addTests(loader.loadTestsFromModule(no_encryption_test))
     return suite
 
 
