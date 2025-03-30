@@ -16,7 +16,7 @@ function sendAliceKey() {
 }
 
 // Listen for key to be sent
-socket.on("key_reconciled", (data) => {
+socket.on("key_sent", (data) => {
   updateLog('Alice', 'sent key: ' + data.encryption + ' - eavesdropping: ' + data.eavesdropping);
 });
 
