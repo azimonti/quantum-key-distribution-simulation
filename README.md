@@ -31,6 +31,8 @@ All the simulations rely on one-time pad cryptography, which is absolutely secur
 
 The difference is how the secret key is exchanged and what is the behavior when an eavesdropper is intercepting the key and what Alice and Bob do to ensure that the key is not leaked.
 
+![Quantum Key Distribution (QKD) Simulation](screenshots/QKD_Simulation.png)
+
 ### No Protocol
 
 In the case where no encryption protocol is used, there is no reconciliation between Bob and Alice, and if an eavesdropper is present, just hold a valid copy of the key and can decode the message without Alice or Bob noticing it.
