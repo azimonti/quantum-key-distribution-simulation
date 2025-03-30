@@ -1,6 +1,6 @@
-# Quantum Cryptography Simulation
+# Quantum Key Distribution (QKD) Simulation
 
-This repository simulates different cryptographic methods:
+This repository simulates different quantum key distribution (QKD) methods:
 
 - No encryption
 - BB84 Protocol
@@ -9,11 +9,11 @@ This repository simulates different cryptographic methods:
 To get started with these simulations:
 1. Clone the repository:
    ```
-   git clone https://github.com/azimonti/quantum-cryptography-simulation.git
+   git clone https://github.com/azimonti/quantum-key-distribution-simulation.git
    ```
 2. Navigate to the repository directory:
    ```
-   cd quantum-cryptography-simulation
+   cd quantum-key-distribution-simulation
    ```
 3. Install required dependencies (a virtual environment can be created running the script `create_env.sh`):
    ```
@@ -43,7 +43,7 @@ After the transmission, Alice and Bob communicate over a public channel to revea
 
 ## Contributing
 
-Contributions to the Quantum Cryptography Simulation project are welcome. Whether it's through submitting bug reports, proposing new features, or contributing to the code, your help is appreciated. For major changes, please open an issue first to discuss what you would like to change.
+Contributions to the Quantum Key Distribution Simulation project are welcome. Whether it's through submitting bug reports, proposing new features, or contributing to the code, your help is appreciated. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
@@ -55,6 +55,6 @@ If you have any questions or want to get in touch regarding the project, please 
 
 ## TODO
 
-- [x] Implement one-time pad cryptography ([#1](https://github.com/azimonti/quantum-cryptography-simulation/issues/1))
-- [x] Implement BB84 Protocol ([#2](https://github.com/azimonti/quantum-cryptography-simulation/issues/2))
-- [ ] Implement Ekert Protocol ([#3](https://github.com/azimonti/quantum-cryptography-simulation/issues/3))
+- [x] Implement one-time pad cryptography ([#1](https://github.com/azimonti/quantum-key-distribution-simulation/issues/1))
+- [x] Implement BB84 Protocol ([#2](https://github.com/azimonti/quantum-key-distribution-simulation/issues/2))
+- [ ] Implement Ekert Protocol ([#3](https://github.com/azimonti/quantum-key-distribution-simulation/issues/3))
