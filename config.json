@@ -12,6 +12,12 @@
     "BASIS": [0, 90]
   },
   "E91Protocol": {
-    "KEY_LENGTH": 2048
+    "KEY_LENGTH": 2048,
+    "BASIS_A": [0, 22.5, 45],
+    "BASIS_B": [0, 22.5, 67.5],
+    "BASIS_E": [0, 22.5, 45, 67.5],
+    "KEY_BASIS": { "A": 0, "B": 0 },
+    "CHSH_A": [22.5, 45],
+    "CHSH_B": [22.5, 67.5]
   }
 }

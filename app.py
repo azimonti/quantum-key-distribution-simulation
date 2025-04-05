@@ -11,7 +11,7 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 import logging
 from types import SimpleNamespace
-from encryptlib import NoEncryption, BB84Protocol
+from encryptlib import NoEncryption, BB84Protocol, E91Protocol
 
 with open('config.json', 'r') as f:
     cfg = json.load(f, object_hook=lambda d: SimpleNamespace(**d))
@@ -41,8 +41,9 @@ def init_protocol(encryption, eavesdropping):
         cache.enc.generateKey()
         cache.enc.sendKey(eavesdropping)
     elif encryption == "Ekert Protocol":
-        # TODO
-        pass
+        cache.enc = E91Protocol(cfg.E91Protocol)
+        cache.enc.generateKey()
+        cache.enc.sendKey(eavesdropping)
 
 
 def check_protocol(encryption):
@@ -54,15 +55,12 @@ def encode_message(message, encryption):
         logger.warning(f"Invalid protocol {encryption}")
         return (f"Invalid protocol \"{encryption}\" - expecting "
                 f"{cache.protocol}")
-    if encryption == "No Protocol" or encryption == "BB84 Protocol":
-        try:
-            cache.enc_message = cache.enc.encrypt(message)
-            # convert to b64 for display
-            message = base64.b64encode(cache.enc_message).decode()
-        except ValueError as e:
-            message = str(e)
-    elif encryption == "Ekert Protocol":
-        message = f"ENC[Ekert]{message}"
+    try:
+        cache.enc_message = cache.enc.encrypt(message)
+        # convert to b64 for display
+        message = base64.b64encode(cache.enc_message).decode()
+    except ValueError as e:
+        message = str(e)
     return message
 
 
@@ -71,14 +69,11 @@ def decode_message_bob(message, encryption):
         logger.warning(f"Invalid protocol {encryption}")
         return (f"Invalid protocol \"{encryption}\" - expecting "
                 f"{cache.protocol}")
-    if encryption == "No Protocol" or encryption == "BB84 Protocol":
-        try:
-            decrypted = cache.enc.decrypt(cache.enc_message)
-            message = decrypted
-        except ValueError as e:
-            message = str(e)
-    elif encryption == "Ekert Protocol":
-        message = message[len("ENC[Ekert]"):]
+    try:
+        decrypted = cache.enc.decrypt(cache.enc_message)
+        message = decrypted
+    except ValueError as e:
+        message = str(e)
     return message
 
 
@@ -87,14 +82,11 @@ def decode_message_eve(message, encryption):
         logger.warning(f"Invalid protocol {encryption}")
         return (f"Invalid protocol \"{encryption}\" - expecting "
                 f"{cache.protocol}")
-    if encryption == "No Protocol" or encryption == "BB84 Protocol":
-        try:
-            decrypted = cache.enc.decrypt(cache.enc_message)
-            message = decrypted
-        except ValueError:
-            message = "You are eavesdropping"
-    elif encryption == "Ekert Protocol":
-        message = message[len("ENC[Ekert]"):]
+    try:
+        decrypted = cache.enc.decrypt(cache.enc_message)
+        message = decrypted
+    except ValueError:
+        message = "You are eavesdropping"
     return message
 
 
@@ -118,11 +110,7 @@ def handle_alice_key(data):
 
 @socketio.on("reconcile_key")
 def handle_reconcile_key(data):
-    if data["encryption"] == "No Protocol" or \
-            data["encryption"] == "BB84 Protocol":
-        reconciled = cache.enc.reconcileKey()
-    else:
-        reconciled = True
+    reconciled = cache.enc.reconcileKey()
     logger.info(f"Key reconciled: {reconciled}")
     emit("key_reconciled", {"encryption": data["encryption"],
                             "reconciled": bool(reconciled)}, broadcast=True)
